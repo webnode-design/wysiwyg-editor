@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RichTextEditor — Webnode demo</title>
+
+  <!-- Webnode CSS tokens (resolved values) -->
+  <style>
+    /* ── Webnode resolved tokens — light mode ─────────────────────────────── */
+    :root {
+      --text\/strong:           hsla(196, 41%, 20%, 1);
+      --text\/weak:             hsla(196, 41%, 20%, 0.6);
+      --text\/disabled:         hsla(196, 41%, 20%, 0.35);
+      --text\/info:             hsla(196, 60%, 38%, 1);
+      --text\/error:            hsla(0, 72%, 51%, 1);
+      --text\/success:          hsla(140, 60%, 35%, 1);
+      --text\/warning:          hsla(36, 90%, 45%, 1);
+      --text\/premium:          hsla(270, 50%, 50%, 1);
+      --text\/brand:            hsla(92, 76%, 40%, 1);
+
+      --background\/base:       hsla(50, 30%, 96%, 1);
+      --background\/raised:     hsla(0, 0%, 100%, 1);
+      --background\/sunken:     hsla(47, 27%, 94%, 1);
+      --background\/alternate:  hsla(92, 76%, 95%, 1);
+      --background\/brand:      hsla(92, 76%, 73%, 1);
+      --background\/inverse:    hsla(196, 41%, 16%, 1);
+
+      --fill\/strong:           hsla(196, 41%, 20%, 1);
+      --fill\/weak:             hsla(196, 41%, 20%, 0.07);
+      --fill\/hover:            hsla(196, 41%, 20%, 0.05);
+      --fill\/press:            hsla(196, 41%, 20%, 0.10);
+      --fill\/selected:         hsla(196, 41%, 20%, 0.08);
+      --fill\/brand-strong:     hsla(92, 76%, 73%, 1);
+      --fill\/brand-weak:       hsla(92, 76%, 73%, 0.20);
+      --fill\/disabled:         hsla(196, 41%, 20%, 0.06);
+      --fill\/overlay:          hsla(196, 41%, 20%, 0.40);
+
+      --stroke\/strong:         hsla(196, 41%, 20%, 0.25);
+      --stroke\/weak:           hsla(196, 41%, 20%, 0.10);
+      --stroke\/selected:       hsla(196, 41%, 20%, 0.50);
+      --stroke\/focus:          hsla(196, 41%, 20%, 0.80);
+      --stroke\/error:          hsla(0, 72%, 51%, 1);
+      --stroke\/brand-strong:   hsla(92, 76%, 50%, 1);
+
+      --spacing\/1: 4px;
+      --spacing\/2: 8px;
+      --spacing\/3: 12px;
+      --spacing\/4: 16px;
+      --spacing\/5: 20px;
+      --spacing\/6: 24px;
+      --spacing\/7: 32px;
+      --spacing\/8: 40px;
+      --spacing\/9: 48px;
+      --spacing\/10: 56px;
+      --spacing\/11: 64px;
+      --spacing\/12: 80px;
+
+      --corner-radius\/0: 0px;
+      --corner-radius\/1: 4px;
+      --corner-radius\/2: 8px;
+      --corner-radius\/3: 12px;
+      --corner-radius\/4: 16px;
+      --corner-radius\/5: 20px;
+      --corner-radius\/6: 24px;
+      --corner-radius\/7: 32px;
+
+      --font-family\/body: 'Graphik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-weight\/strong: 500;
+      --font-weight\/weak:   400;
+
+      --font-size\/display: 56px;
+      --font-size\/h1:      40px;
+      --font-size\/h2:      32px;
+      --font-size\/h3:      24px;
+      --font-size\/h4:      20px;
+      --font-size\/large:   18px;
+      --font-size\/medium:  16px;
+      --font-size\/small:   14px;
+
+      --line-height\/display: 64px;
+      --line-height\/h1:      48px;
+      --line-height\/h2:      40px;
+      --line-height\/h3:      32px;
+      --line-height\/h4:      28px;
+      --line-height\/large:   26px;
+      --line-height\/medium:  24px;
+      --line-height\/small:   20px;
+    }
+
+    /* ── Dark mode ───────────────────────────────────────────────────────── */
+    [data-theme="dark"] {
+      --text\/strong:           hsla(38, 58%, 96%, 1);
+      --text\/weak:             hsla(38, 58%, 96%, 0.60);
+      --text\/disabled:         hsla(38, 58%, 96%, 0.30);
+
+      --background\/base:       hsla(196, 41%, 16%, 1);
+      --background\/raised:     hsla(196, 41%, 20%, 1);
+      --background\/sunken:     hsla(197, 41%, 12%, 1);
+
+      --fill\/strong:           hsla(38, 58%, 96%, 1);
+      --fill\/weak:             hsla(38, 58%, 96%, 0.08);
+      --fill\/hover:            hsla(38, 58%, 96%, 0.06);
+      --fill\/press:            hsla(38, 58%, 96%, 0.12);
+      --fill\/selected:         hsla(38, 58%, 96%, 0.10);
+
+      --stroke\/strong:         hsla(38, 58%, 96%, 0.20);
+      --stroke\/weak:           hsla(38, 58%, 96%, 0.08);
+      --stroke\/focus:          hsla(38, 58%, 96%, 0.80);
+    }
+
+    /* ── Page layout ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font-family\/body);
+      background: var(--background\/base);
+      color: var(--text\/strong);
+      padding: var(--spacing\/9) var(--spacing\/6);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .demo-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing\/6);
+    }
+
+    .demo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .demo-title {
+      font-size: var(--font-size\/h3);
+      font-weight: var(--font-weight\/strong);
+      line-height: var(--line-height\/h3);
+      margin: 0;
+    }
+
+    .demo-subtitle {
+      font-size: var(--font-size\/small);
+      color: var(--text\/weak);
+      margin: var(--spacing\/1) 0 0;
+    }
+
+    /* Toggle dark mode */
+    .theme-toggle {
+      font-family: var(--font-family\/body);
+      font-size: var(--font-size\/small);
+      font-weight: var(--font-weight\/strong);
+      height: 36px;
+      padding: 0 var(--spacing\/3);
+      border: 1px solid var(--stroke\/strong);
+      border-radius: var(--corner-radius\/7);
+      background: transparent;
+      color: var(--text\/strong);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing\/1);
+    }
+    .theme-toggle:hover { background: var(--fill\/hover); }
+
+    /* Output preview */
+    .demo-output {
+      background: var(--background\/raised);
+      border: 1px solid var(--stroke\/weak);
+      border-radius: var(--corner-radius\/3);
+      padding: var(--spacing\/5) var(--spacing\/6);
+    }
+    .demo-output-label {
+      font-size: var(--font-size\/small);
+      font-weight: var(--font-weight\/strong);
+      color: var(--text\/weak);
+      margin: 0 0 var(--spacing\/2);
+    }
+    .demo-output-html {
+      font-family: 'SF Mono', 'Fira Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: var(--text\/strong);
+      white-space: pre-wrap;
+      word-break: break-all;
+      margin: 0;
+    }
+  </style>
+
+  <!-- RichTextEditor styles -->
+  <link rel="stylesheet" href="RichTextEditor.css" />
+
+  <!-- Lucide icons via CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div class="demo-wrap">
+
+    <div class="demo-header">
+      <div>
+        <h1 class="demo-title">RichTextEditor</h1>
+        <p class="demo-subtitle">Webnode simple WYSIWYG — demo</p>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙 Tmavý režim</button>
+    </div>
+
+    <!-- ── Editor shell ──────────────────────────────────────────────────── -->
+    <div class="rte" id="rte">
+
+      <!-- Toolbar -->
+      <div class="rte-toolbar" role="toolbar" aria-label="Formátování textu">
+
+        <select class="rte-heading-select" id="headingSelect" onchange="applyHeading(this)" aria-label="Styl nadpisu">
+          <option value="p">Odstavec</option>
+          <option value="h1">Nadpis 1</option>
+          <option value="h2">Nadpis 2</option>
+          <option value="h3">Nadpis 3</option>
+          <option value="h4">Nadpis 4</option>
+        </select>
+
+        <span class="rte-toolbar-divider" aria-hidden="true"></span>
+
+        <button class="rte-toolbar-btn" title="Tučné (Ctrl+B)" id="btn-bold"
+                onmousedown="e(event,'bold')" aria-label="Tučné">
+          <i data-lucide="bold"></i>
+        </button>
+        <button class="rte-toolbar-btn" title="Kurzíva (Ctrl+I)" id="btn-italic"
+                onmousedown="e(event,'italic')" aria-label="Kurzíva">
+          <i data-lucide="italic"></i>
+        </button>
+        <button class="rte-toolbar-btn" title="Podtržení (Ctrl+U)" id="btn-underline"
+                onmousedown="e(event,'underline')" aria-label="Podtržení">
+          <i data-lucide="underline"></i>
+        </button>
+        <button class="rte-toolbar-btn" title="Přeškrtnutí" id="btn-strike"
+                onmousedown="e(event,'strikeThrough')" aria-label="Přeškrtnutí">
+          <i data-lucide="strikethrough"></i>
+        </button>
+
+        <span class="rte-toolbar-divider" aria-hidden="true"></span>
+
+        <button class="rte-toolbar-btn" title="Vlevo" id="btn-left"
+                onmousedown="e(event,'justifyLeft')" aria-label="Zarovnat vlevo">
+          <i data-lucide="align-left"></i>
+        </button>
+        <button class="rte-toolbar-btn" title="Na střed" id="btn-center"
+                onmousedown="e(event,'justifyCenter')" aria-label="Zarovnat na střed">
+          <i data-lucide="align-center"></i>
+        </button>
+        <button class="rte-toolbar-btn" title="Vpravo" id="btn-right"
+                onmousedown="e(event,'justifyRight')" aria-label="Zarovnat vpravo">
+          <i data-lucide="align-right"></i>
+        </button>
+
+        <span class="rte-toolbar-divider" aria-hidden="true"></span>
+
+        <button class="rte-toolbar-btn" title="Odrážkový seznam" id="btn-ul"
+                onmousedown="e(event,'insertUnorderedList')" aria-label="Odrážkový seznam">
+          <i data-lucide="list"></i>
+        </button>
+        <button class="rte-toolbar-btn" title="Číslovaný seznam" id="btn-ol"
+                onmousedown="e(event,'insertOrderedList')" aria-label="Číslovaný seznam">
+          <i data-lucide="list-ordered"></i>
+        </button>
+
+        <span class="rte-toolbar-divider" aria-hidden="true"></span>
+
+        <button class="rte-toolbar-btn" title="Vložit odkaz" id="btn-link"
+                onmousedown="openLinkDialog(event)" aria-label="Vložit odkaz">
+          <i data-lucide="link"></i>
+        </button>
+
+        <span class="rte-toolbar-divider" aria-hidden="true"></span>
+
+        <button class="rte-toolbar-btn" title="Zpět (Ctrl+Z)"
+                onmousedown="e(event,'undo')" aria-label="Zpět">
+          <i data-lucide="undo-2"></i>
+        </button>
+        <button class="rte-toolbar-btn" title="Znovu (Ctrl+Y)"
+                onmousedown="e(event,'redo')" aria-label="Znovu">
+          <i data-lucide="redo-2"></i>
+        </button>
+      </div>
+
+      <!-- Editable area -->
+      <div
+        id="editor"
+        class="rte-content"
+        contenteditable="true"
+        data-placeholder="Začněte psát..."
+        style="min-height:240px"
+        role="textbox"
+        aria-multiline="true"
+        aria-label="Editor obsahu"
+        spellcheck="true"
+        onkeyup="onEditorChange()"
+        onmouseup="updateToolbar()"
+        oninput="onEditorChange()"
+      ></div>
+
+      <!-- Footer -->
+      <div class="rte-footer">
+        <span id="wordCount">0 slov</span>
+        <span id="charCount">0 znaků</span>
+      </div>
+    </div>
+
+    <!-- Link dialog (hidden by default) -->
+    <div class="rte-link-overlay" id="linkDialog" style="display:none"
+         role="dialog" aria-modal="true" aria-label="Vložit odkaz">
+      <div class="rte-link-dialog">
+        <p class="rte-link-title">Vložit odkaz</p>
+        <input class="rte-link-input" type="url" id="linkUrl"
+               placeholder="https://example.com"
+               onkeydown="if(event.key==='Enter') applyLink(); if(event.key==='Escape') closeLink();" />
+        <div class="rte-link-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeLink()">Zrušit</button>
+          <button type="button" class="btn btn-tertiary" onclick="removeLink()">Odebrat odkaz</button>
+          <button type="button" class="btn btn-secondary" onclick="applyLink()">Použít</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- HTML output preview -->
+    <div class="demo-output">
+      <p class="demo-output-label">HTML výstup</p>
+      <pre class="demo-output-html" id="htmlOutput">(zatím prázdné)</pre>
+    </div>
+
+  </div><!-- /demo-wrap -->
+
+  <script>
+    lucide.createIcons();
+
+    // ── exec helper ─────────────────────────────────────────────────────────
+    function e(event, command, value) {
+      event.preventDefault();
+      document.execCommand(command, false, value || null);
+      updateToolbar();
+      updateOutput();
+    }
+
+    // ── heading ─────────────────────────────────────────────────────────────
+    function applyHeading(sel) {
+      document.execCommand('formatBlock', false, sel.value === 'p' ? 'p' : sel.value);
+      document.getElementById('editor').focus();
+      updateOutput();
+    }
+
+    // ── toolbar state ────────────────────────────────────────────────────────
+    function updateToolbar() {
+      const map = {
+        'btn-bold':      'bold',
+        'btn-italic':    'italic',
+        'btn-underline': 'underline',
+        'btn-strike':    'strikeThrough',
+        'btn-ul':        'insertUnorderedList',
+        'btn-ol':        'insertOrderedList',
+        'btn-left':      'justifyLeft',
+        'btn-center':    'justifyCenter',
+        'btn-right':     'justifyRight',
+      };
+      Object.entries(map).forEach(([id, cmd]) => {
+        document.getElementById(id)?.classList.toggle(
+          'rte-toolbar-btn--active',
+          document.queryCommandState(cmd)
+        );
+      });
+
+      // Heading select
+      const block = document.queryCommandValue('formatBlock').toLowerCase();
+      const sel = document.getElementById('headingSelect');
+      if (['h1','h2','h3','h4','p'].includes(block)) sel.value = block;
+      else sel.value = 'p';
+    }
+
+    // ── counts & output ──────────────────────────────────────────────────────
+    function onEditorChange() {
+      updateToolbar();
+      updateCounts();
+      updateOutput();
+    }
+
+    function updateCounts() {
+      const text = document.getElementById('editor').innerText;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+      const chars = text.length;
+
+      const wLabel = words === 1 ? 'slovo' : words < 5 ? 'slova' : 'slov';
+      const cLabel = chars === 1 ? 'znak' : chars < 5 ? 'znaky' : 'znaků';
+      document.getElementById('wordCount').textContent = `${words} ${wLabel}`;
+      document.getElementById('charCount').textContent = `${chars} ${cLabel}`;
+    }
+
+    function updateOutput() {
+      const html = document.getElementById('editor').innerHTML;
+      document.getElementById('htmlOutput').textContent = html || '(prázdné)';
+    }
+
+    // ── link dialog ──────────────────────────────────────────────────────────
+    let savedRange = null;
+
+    function openLinkDialog(event) {
+      event.preventDefault();
+      const sel = window.getSelection();
+      if (sel && sel.rangeCount > 0) savedRange = sel.getRangeAt(0).cloneRange();
+
+      const existing = sel?.anchorNode?.parentElement?.closest('a');
+      document.getElementById('linkUrl').value = existing?.href || 'https://';
+      document.getElementById('linkDialog').style.display = 'flex';
+      setTimeout(() => document.getElementById('linkUrl').focus(), 50);
+    }
+
+    function restoreRange() {
+      if (!savedRange) return;
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(savedRange);
+    }
+
+    function applyLink() {
+      restoreRange();
+      const url = document.getElementById('linkUrl').value.trim();
+      if (url) document.execCommand('createLink', false, url);
+      closeLink();
+      updateOutput();
+    }
+
+    function removeLink() {
+      restoreRange();
+      document.execCommand('unlink');
+      closeLink();
+      updateOutput();
+    }
+
+    function closeLink() {
+      document.getElementById('linkDialog').style.display = 'none';
+      document.getElementById('linkUrl').value = '';
+    }
+
+    // close on overlay click
+    document.getElementById('linkDialog').addEventListener('click', function(e) {
+      if (e.target === this) closeLink();
+    });
+
+    // ── dark mode ────────────────────────────────────────────────────────────
+    function toggleTheme() {
+      const isDark = document.documentElement.hasAttribute('data-theme');
+      document.documentElement.toggleAttribute('data-theme');
+      if (!isDark) document.documentElement.setAttribute('data-theme', 'dark');
+      else document.documentElement.removeAttribute('data-theme');
+      document.getElementById('themeBtn').textContent = isDark ? '🌙 Tmavý režim' : '☀️ Světlý režim';
+    }
+  </script>
+</body>
+</html>

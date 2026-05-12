@@ -1,0 +1,335 @@
+/* ── RichTextEditor — Webnode design system ─────────────────────────────────
+   All values use CSS custom properties from the Webnode token set.
+   Import webnode-tokens-resolved.css (or equivalent) before this file.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── Shell ─────────────────────────────────────────────────────────────────── */
+
+.rte {
+  font-family: var(--font-family/body);
+  background: var(--background/raised);
+  border: 1px solid var(--stroke/strong);
+  border-radius: var(--corner-radius/3);       /* 12px */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 1px 3px hsla(196, 41%, 20%, 0.06);
+}
+
+/* ── Toolbar ───────────────────────────────────────────────────────────────── */
+
+.rte-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing/1);                        /* 4px */
+  padding: var(--spacing/2) var(--spacing/3);   /* 8px 12px */
+  background: var(--background/sunken);
+  border-bottom: 1px solid var(--stroke/weak);
+}
+
+/* Toolbar icon button */
+.rte-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: var(--corner-radius/1);        /* 4px */
+  background: transparent;
+  color: var(--text/strong);
+  cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+  flex-shrink: 0;
+}
+
+.rte-toolbar-btn:hover {
+  background: var(--fill/hover);
+}
+
+.rte-toolbar-btn:active {
+  background: var(--fill/press);
+}
+
+.rte-toolbar-btn--active {
+  background: var(--fill/selected);
+  color: var(--text/strong);
+}
+
+.rte-toolbar-btn:focus-visible {
+  outline: 2px solid var(--stroke/focus);
+  outline-offset: 1px;
+}
+
+.rte-toolbar-btn:disabled {
+  color: var(--text/disabled);
+  cursor: not-allowed;
+}
+
+.rte-toolbar-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--stroke/weak);
+  margin: 0 var(--spacing/1);                   /* 0 4px */
+  flex-shrink: 0;
+}
+
+/* Heading select */
+.rte-heading-select {
+  font-family: var(--font-family/body);
+  font-size: var(--font-size/small);            /* 14px */
+  font-weight: var(--font-weight/strong);
+  line-height: var(--line-height/small);
+  color: var(--text/strong);
+  background: var(--background/raised);
+  border: 1px solid var(--stroke/strong);
+  border-radius: var(--corner-radius/1);        /* 4px */
+  padding: 0 var(--spacing/2);                  /* 0 8px */
+  height: 32px;
+  cursor: pointer;
+  appearance: none;
+  padding-right: var(--spacing/5);              /* room for arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%231e3c47' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+}
+
+.rte-heading-select:focus-visible {
+  outline: 2px solid var(--stroke/focus);
+  outline-offset: 1px;
+}
+
+/* ── Editable content area ─────────────────────────────────────────────────── */
+
+.rte-content {
+  padding: var(--spacing/5) var(--spacing/6);   /* 20px 24px */
+  font-family: var(--font-family/body);
+  font-size: var(--font-size/medium);           /* 16px */
+  line-height: var(--line-height/medium);       /* 24px */
+  color: var(--text/strong);
+  outline: none;
+  overflow-y: auto;
+  word-break: break-word;
+}
+
+/* Placeholder (shown when empty) */
+.rte-content:empty::before {
+  content: attr(data-placeholder);
+  color: var(--text/weak);
+  pointer-events: none;
+}
+
+/* Focus ring on the container instead of outline on the div */
+.rte:focus-within {
+  border-color: var(--stroke/strong);
+  box-shadow: 0 0 0 3px hsla(196, 41%, 20%, 0.08);
+}
+
+/* ── Typography inside editor ─────────────────────────────────────────────── */
+
+.rte-content h1 {
+  font-size: var(--font-size/h1);               /* 40px */
+  line-height: var(--line-height/h1);           /* 48px */
+  font-weight: var(--font-weight/strong);
+  margin: 0 0 var(--spacing/4);
+}
+
+.rte-content h2 {
+  font-size: var(--font-size/h2);               /* 32px */
+  line-height: var(--line-height/h2);
+  font-weight: var(--font-weight/strong);
+  margin: 0 0 var(--spacing/3);
+}
+
+.rte-content h3 {
+  font-size: var(--font-size/h3);               /* 24px */
+  line-height: var(--line-height/h3);
+  font-weight: var(--font-weight/strong);
+  margin: 0 0 var(--spacing/3);
+}
+
+.rte-content h4 {
+  font-size: var(--font-size/h4);               /* 20px */
+  line-height: var(--line-height/h4);
+  font-weight: var(--font-weight/strong);
+  margin: 0 0 var(--spacing/2);
+}
+
+.rte-content p {
+  margin: 0 0 var(--spacing/3);                 /* 12px */
+}
+
+.rte-content p:last-child,
+.rte-content h1:last-child,
+.rte-content h2:last-child,
+.rte-content h3:last-child,
+.rte-content h4:last-child {
+  margin-bottom: 0;
+}
+
+.rte-content a {
+  color: var(--text/info);
+  text-decoration: underline;
+}
+
+.rte-content a:hover {
+  text-decoration: none;
+}
+
+.rte-content ul,
+.rte-content ol {
+  margin: 0 0 var(--spacing/3);
+  padding-left: var(--spacing/6);               /* 24px */
+}
+
+.rte-content li {
+  margin-bottom: var(--spacing/1);              /* 4px */
+}
+
+.rte-content blockquote {
+  margin: 0 0 var(--spacing/3);
+  padding: var(--spacing/3) var(--spacing/4);
+  border-left: 3px solid var(--stroke/strong);
+  color: var(--text/weak);
+  background: var(--background/sunken);
+  border-radius: 0 var(--corner-radius/1) var(--corner-radius/1) 0;
+}
+
+/* ── Footer (word / char count) ──────────────────────────────────────────────*/
+
+.rte-footer {
+  display: flex;
+  gap: var(--spacing/4);                        /* 16px */
+  justify-content: flex-end;
+  padding: var(--spacing/2) var(--spacing/4);   /* 8px 16px */
+  background: var(--background/sunken);
+  border-top: 1px solid var(--stroke/weak);
+  font-size: var(--font-size/small);            /* 14px */
+  line-height: var(--line-height/small);
+  color: var(--text/weak);
+  user-select: none;
+}
+
+/* ── Link dialog ──────────────────────────────────────────────────────────── */
+
+.rte-link-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--fill/overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.rte-link-dialog {
+  background: var(--background/raised);
+  border-radius: var(--corner-radius/4);        /* 16px */
+  padding: var(--spacing/7);                    /* 32px */
+  box-shadow: 0 8px 32px hsla(196, 41%, 20%, 0.12);
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing/4);                        /* 16px */
+}
+
+.rte-link-title {
+  font-size: var(--font-size/h4);               /* 20px */
+  font-weight: var(--font-weight/strong);
+  line-height: var(--line-height/h4);
+  color: var(--text/strong);
+  margin: 0;
+}
+
+.rte-link-input {
+  font-family: var(--font-family/body);
+  font-size: var(--font-size/medium);
+  line-height: var(--line-height/medium);
+  color: var(--text/strong);
+  background: var(--background/raised);
+  border: 1px solid var(--stroke/strong);
+  border-radius: var(--corner-radius/2);        /* 8px */
+  padding: var(--spacing/3) var(--spacing/4);   /* 12px 16px */
+  height: 48px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.rte-link-input::placeholder {
+  color: var(--text/weak);
+}
+
+.rte-link-input:focus {
+  border-color: var(--stroke/strong);
+  border-width: 2px;
+  padding: calc(var(--spacing/3) - 1px) calc(var(--spacing/4) - 1px);
+  outline: none;
+}
+
+.rte-link-actions {
+  display: flex;
+  gap: var(--spacing/2);                        /* 8px */
+  justify-content: flex-end;
+}
+
+/* ── Shared button classes (mirror component-catalog.md) ────────────────────
+   These are expected to come from your global stylesheet in production.
+   Included here so the dialog renders correctly in isolation.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.btn {
+  font-family: var(--font-family/body);
+  font-weight: var(--font-weight/strong);
+  font-size: var(--font-size/small);
+  line-height: var(--line-height/small);
+  height: 48px;
+  padding: 0 var(--spacing/4);
+  border-radius: var(--corner-radius/7);        /* 32px — pill */
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing/1);
+  position: relative;
+  transition: opacity 0.15s ease;
+  text-decoration: none;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.08);
+  pointer-events: none;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--text/strong);
+  outline-offset: 2px;
+}
+
+.btn-secondary {
+  background: var(--fill/strong);
+  color: white;
+}
+.btn-secondary:hover { opacity: 0.88; }
+.btn-secondary:active { opacity: 0.82; }
+
+.btn-tertiary {
+  background: var(--fill/weak);
+  color: var(--text/strong);
+}
+.btn-tertiary:hover { background: var(--fill/hover); }
+.btn-tertiary:active { background: var(--fill/press); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text/strong);
+  border: 1px solid var(--stroke/strong);
+}
+.btn-ghost:hover { background: var(--fill/hover); }
+.btn-ghost:active { opacity: 0.85; }
